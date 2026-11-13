@@ -15,6 +15,18 @@
         </div>
         <div class="col-2">
             <div class="form-group" id="filter-container">
+                <label>Nama Kategori</label>
+                <input type="text" class="form-control" id="filter-kategori">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group" id="filter-container">
+                <label>Kode Kategori</label>
+                <input type="text" class="form-control" id="filter-kode-kategori">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group" id="filter-container">
                 <label>Harga Min</label>
                 <input type="number" class="form-control" id="filter-harga-min">
             </div>

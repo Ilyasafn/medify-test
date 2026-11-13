@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('jenis');
             $table->timestamps();
             $table->softDeletes();
+            $table->string('foto')->nullable();
         });
     }
 

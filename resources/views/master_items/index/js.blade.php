@@ -26,6 +26,8 @@
         var dataTableObj = $('#table').DataTable();
         var filter_kode = $('#filter-kode').val()
         var filter_nama = $('#filter-nama').val()
+        var filter_kategori = $('#filter-kategori').val()
+        var filter_kode_kategori = $('#filter-kode-kategori').val()
         var filter_harga_min = $('#filter-harga-min').val()
         var filter_harga_max = $('#filter-harga-max').val()
         dataTableObj.clear().draw();

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KategoriItem;
 use App\Models\MasterItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MasterItemsController extends Controller
 {
@@ -23,7 +25,8 @@ class MasterItemsController extends Controller
 
         if (!empty($kode)) $data_search = $data_search->where('kode', $kode);
         if (!empty($nama)) $data_search = $data_search->where('nama', 'LIKE', '%' . $nama . '%');
-        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin)->where('harga_beli', '<=', $hargamax);
+        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin);
+        if (!empty($hargamax)) $data_search = $data_search->where('harga_beli', '<=', $hargamax);
 
         $data_search = $data_search->select('kode', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
 
@@ -37,12 +40,13 @@ class MasterItemsController extends Controller
     public function formView($method, $id = 0)
     {
         if ($method == 'new') {
-            $item = [];
+            $item = new MasterItem();
         } else {
-            $item = MasterItem::find($id);
+            $item = MasterItem::with('kategoriItems')->findOrFail($id);
         }
         $data['item'] = $item;
         $data['method'] = $method;
+        $data['kategoriItems'] = KategoriItem::all();
         return view('master_items.form.index', $data);
     }
 
@@ -73,6 +77,25 @@ class MasterItemsController extends Controller
         $data_item->jenis = $request->jenis;
         $data_item->save();
 
+        if($request->hasFile('foto'))
+        {
+            if ($data_item->foto) {
+                Storage::disk('public')->delete($data_item->foto);
+            }
+
+            $fotoPath = $request->file('foto')->store(
+                'master_items',
+                'public');
+
+            $data_item->foto = $fotoPath;
+        }
+
+        dd($request->all());
+        
+        $data_item->save();
+        $data_item->kategoriItems()->sync(
+        $request->input('kategori_items', [])
+        );
         return redirect('master-items');
     }
 
